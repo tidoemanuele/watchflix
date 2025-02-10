@@ -24,7 +24,7 @@ void main() {
     Provider.value(
       value: AppConfig(
         watchmodeBaseUrl: Uri.parse('https://api.watchmode.com/v1'),
-        watchmodeApiKey: 'eWH2ysWUTrZsakZMLTJQPynOtSVOXDVG0HNFknvl',
+        watchmodeApiKey: 'YOUR_API_KEY_HERE',
       ),
       child: const MainApp(),
     ),
