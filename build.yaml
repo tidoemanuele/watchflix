@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      swagger_dart_code_generator:
+        options:
+          input_folder: lib/api
+          output_folder: lib/api/gen
+          separate_models: true
+          with_base_url: false

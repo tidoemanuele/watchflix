@@ -1,0 +1,219 @@
+openapi: 3.0.0
+info:
+  title: Watchmode API
+  description: >
+    The Watchmode API provides comprehensive data on movies and TV shows, including streaming availability, title details, genres, and more.
+  version: 1.0.0
+servers:
+  - url: https://api.watchmode.com/v1
+    description: Main API server
+paths:
+  /sources/:
+    get:
+      summary: Retrieve a list of streaming sources
+      description: >
+        Fetches a list of all available streaming sources with their corresponding IDs and names.
+      responses:
+        '200':
+          description: A list of streaming sources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SourceSummary'
+        '401':
+          description: Unauthorized - Invalid API key
+        '429':
+          description: Too Many Requests - Rate limit exceeded
+  /title/{title_id}/details/:
+    get:
+      summary: Retrieve Title Details
+      description: >
+        Fetches detailed information about a specific movie or TV show using its unique Watchmode ID.
+      parameters:
+        - name: title_id
+          in: path
+          required: true
+          description: The unique ID of the title
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detailed information about the title
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TitleDetails'
+        '400':
+          description: Bad Request - Invalid title ID
+        '401':
+          description: Unauthorized - Invalid API key
+        '404':
+          description: Not Found - Title does not exist
+        '429':
+          description: Too Many Requests - Rate limit exceeded
+  /list-titles/:
+    get:
+      summary: List Titles
+      description: >
+        Fetches a list of titles with optional filters such as genre, release year, user rating, and more.
+      parameters:
+        - name: source_ids
+          in: query
+          required: true
+          description: A comma-separated list of source IDs to filter by
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          description: Maximum number of titles to return (default is 10)
+          schema:
+            type: integer
+        - name: page
+          in: query
+          required: true
+          description: The page number for paginated results (default is 1)
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of titles matching the specified filters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TitlesResult'
+        '401':
+          description: Unauthorized - Invalid API key
+        '429':
+          description: Too Many Requests - Rate limit exceeded
+components:
+  schemas:
+    SourceSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the source
+        name:
+          type: string
+          description: The name of the source (e.g., Netflix)
+        type:
+          description: The type of the source
+          schema:
+            $ref: '#/components/schemas/SourceType'
+        logo_100px:
+          type: string
+          format: uri
+          description: URL to the source's 100px logo
+        regions:
+          type: array
+          description: A list of regions where the source is available
+          items:
+            type: string
+            description: The region code (e.g., "US", "CA")
+      required:
+        - id
+        - name
+        - type
+        - logo_100px
+        - regions
+    SourceType:
+      type: string
+      enum: [ sub, free, purchase, tve ]
+    TitleSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the title
+        title:
+          type: string
+          description: The name of the title
+        year:
+          type: integer
+          description: The release year of the title
+        type:
+          schema:
+            $ref: '#/components/schemas/TitleType'
+          description: The general type of the title
+      required:
+        - id
+        - title
+        - year
+        - type
+    TitleDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the title
+        title:
+          type: string
+          description: The name of the title
+        plot_overview:
+          type: string
+          description: A brief summary of the title's plot
+        type:
+          schema:
+            $ref: '#/components/schemas/TitleType'
+          description: The type of the title
+        year:
+          type: integer
+          description: The release year of the title
+        genre_names:
+          type: array
+          description: A list of genre names
+          items:
+            type: string
+        user_rating:
+          type: number
+          format: float
+          description: The average user rating for the title
+        critic_score:
+          type: integer
+          description: The critic score for the title
+        poster:
+          type: string
+          format: uri
+          description: The URL to the poster image of the title
+        backdrop:
+          type: string
+          format: uri
+          description: The URL to the backdrop image of the title
+        relevance_percentile:
+          type: number
+          format: float
+          description: The relevance percentile of the title
+      required:
+        - id
+        - title
+        - plot_overview
+        - type
+        - year
+        - genre_names
+        - poster
+    TitlesResult:
+      type: object
+      properties:
+        total_results:
+          type: integer
+          description: The total number of results
+        page:
+          type: integer
+          description: The current page number
+        total_pages:
+          type: integer
+          description: The total page number
+        titles:
+          type: array
+          items:
+            $ref: '#/components/schemas/TitleSummary'
+      required:
+        - page
+        - total_pages
+        - titles
+    TitleType:
+      type: string
+      enum: [ movie, tv_series, tv_special, tv_miniseries, short_film ]
