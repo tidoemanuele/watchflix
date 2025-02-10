@@ -2,7 +2,7 @@
 
 ## 1. Overall Feature Architecture
 
-![Overall Feature Architecture](docs/images/1_overall_feature_architecture.png)
+![Overall Feature Architecture](docs/1_overall_feature_architecture.png)
 
 The application follows a feature-first architecture with clean separation of concerns across multiple layers. The architecture is designed to be scalable, maintainable, and testable.
 
@@ -23,7 +23,7 @@ App Entry → Splash → Sources → List Titles → Title Details
 
 ## 2. Feature Layer Structure
 
-![Feature Layer Structure](docs/images/2_feature_layer_structure.png)
+![Feature Layer Structure](docs/2_feature_layer_structure.png)
 
 Each feature in the application is organized into three main layers:
 
@@ -43,7 +43,7 @@ Each feature in the application is organized into three main layers:
 
 ## 3. Data Flow Architecture
 
-![Data Flow Architecture](docs/images/3_data_flow_architecture.png)
+![Data Flow Architecture](docs/3_data_flow_architecture.png)
 
 The application implements a unidirectional data flow:
 
@@ -57,7 +57,7 @@ The application implements a unidirectional data flow:
 
 ## 4. Navigation Flow
 
-![Navigation Flow](docs/images/4_navigation_flow.png)
+![Navigation Flow](docs/4_navigation_flow.png)
 
 The application uses GoRouter for navigation with the following structure:
 
@@ -74,7 +74,7 @@ The application uses GoRouter for navigation with the following structure:
 
 ## 5. State Management
 
-![State Management](docs/images/5_state_management.png)
+![State Management](docs/5_state_management.png)
 
 State handling uses Bloc/Cubit pattern with Provider:
 
