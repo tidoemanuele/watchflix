@@ -9,7 +9,6 @@ import 'package:watchflix/features/list_titles/domain/usecases/get_titles_usecas
 import 'package:watchflix/features/list_titles/presentation/cubit/titles_cubit.dart';
 import 'package:watchflix/features/list_titles/presentation/screens/titles_screen.dart';
 import 'package:watchflix/features/sources/data/repositories/sources_repository.dart';
-import 'package:watchflix/features/sources/domain/usecases/get_source_by_id_usecase.dart';
 import 'package:watchflix/features/sources/domain/usecases/get_sources_usecase.dart';
 import 'package:watchflix/features/sources/presentation/cubit/sources_cubit.dart';
 import 'package:watchflix/features/sources/presentation/screens/sources_screen.dart';
@@ -46,10 +45,7 @@ abstract class AppRouter {
         builder: (context, state) => BlocProvider.value(
           value: SourcesCubit(
             getSourcesUseCase: GetSourcesUseCase(
-              context.read<SourcesRepository>(),
-            ),
-            getSourceByIdUseCase: GetSourceByIdUseCase(
-              context.read<SourcesRepository>(),
+              context.watch<SourcesRepository>(),
             ),
           )..load(),
           child: const SourcesScreen(),
@@ -66,7 +62,7 @@ abstract class AppRouter {
           return BlocProvider.value(
             value: TitlesCubit(
               getTitlesUseCase: GetTitlesUseCase(
-                context.read<TitlesRepository>(),
+                context.watch<TitlesRepository>(),
               ),
               sourceIds: sourceIds,
             )..refresh(),
@@ -86,7 +82,7 @@ abstract class AppRouter {
           return BlocProvider.value(
             value: TitleDetailsCubit(
               GetTitleDetailsUseCase(
-                context.read<TitleDetailsRepository>(),
+                context.watch<TitleDetailsRepository>(),
               ),
             )..loadDetails(titleId),
             child: const TitleDetailsScreen(),

@@ -27,25 +27,6 @@ class SourcesRepository implements ISourcesRepository {
     }
   }
 
-  @override
-  Future<SourceSummary> getSourceById(int sourceId) async {
-    final cachedSource = _cache.getSourceById(sourceId);
-    if (cachedSource != null) {
-      return cachedSource;
-    }
-
-    try {
-      final sources = await getSources();
-      final source = _findSourceInCategories(sources, sourceId);
-      if (source != null) {
-        return source;
-      }
-      throw Exception('Source not found');
-    } catch (e) {
-      throw Exception('Failed to load source: $e');
-    }
-  }
-
   void clearCache() => _cache.clear();
 
   SourceSummary? _findSourceInCategories(
@@ -67,7 +48,6 @@ class _SourcesCache {
   const _SourcesCache();
 
   static final _sourcesCache = <CacheEntry<CategoryizedSources>>[];
-  static final _sourceByIdCache = <int, CacheEntry<SourceSummary>>{};
 
   CategoryizedSources? getSources() {
     if (_sourcesCache.isEmpty) {
@@ -92,17 +72,8 @@ class _SourcesCache {
     );
   }
 
-  SourceSummary? getSourceById(int sourceId) {
-    final entry = _sourceByIdCache[sourceId];
-    if (entry == null || entry.isExpired) {
-      _sourceByIdCache.remove(sourceId);
-      return null;
-    }
-    return entry.data;
-  }
 
   void clear() {
     _sourcesCache.clear();
-    _sourceByIdCache.clear();
   }
 }
